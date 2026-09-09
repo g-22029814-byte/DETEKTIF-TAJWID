@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PEN-TAJ+ Detektif Tajwid</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+
+:root{
+    --navy:#173b70;
+    --blue:#2563eb;
+    --cyan:#06b6d4;
+    --gold:#f59e0b;
+    --green:#16a34a;
+    --red:#dc2626;
+    --purple:#7c3aed;
+    --pink:#ec4899;
+    --cream:#f8fafc;
+    --dark:#172033;
+    --muted:#64748b;
+    --white:#ffffff;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(255,255,255,.18),transparent 25%),
+        radial-gradient(circle at 90% 80%,rgba(255,255,255,.12),transparent 25%),
+        linear-gradient(135deg,#173b70,#2563eb,#06b6d4);
+    padding:20px;
+    color:var(--dark);
+}
+
+.game{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    background:white;
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
+
+/* HEADER */
+
+.header{
+    background:linear-gradient(135deg,#173b70,#2563eb);
+    color:white;
+    padding:24px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#ffd166;
+}
+
+.subtitle{
+    font-size:13px;
+    opacity:.85;
+}
+
+.stats{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.stat{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    padding:9px 15px;
+    border-radius:15px;
+    text-align:center;
+    min-width:90px;
+}
+
+.stat small{
+    display:block;
+    font-size:10px;
+    opacity:.8;
+}
+
+.stat strong{
+    font-size:17px;
+}
+
+/* PROGRESS */
+
+.progress-area{
+    padding:18px 30px 8px;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    font-weight:600;
+    color:var(--muted);
+    margin-bottom:8px;
+}
+
+.progress-bar{
+    height:12px;
+    background:#e2e8f0;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#06b6d4,#2563eb,#7c3aed);
+    border-radius:20px;
+    transition:.5s;
+}
+
+/* MAIN */
+
+.main{
+    padding:25px 30px 35px;
+}
+
+.case-title{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.detective-icon{
+    width:60px;
+    height:60px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#f59e0b,#f97316);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:34px;
+    box-shadow:0 8px 20px rgba(245,158,11,.3);
+}
+
+.case-title h1{
+    margin:0;
+    font-size:25px;
+}
+
+.case-title p{
+    margin:4px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* CASE */
+
+.case-card{
+    background:linear-gradient(135deg,#f8fafc,#eef6ff);
+    border:2px solid #dbeafe;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:20px;
+    position:relative;
+}
+
+.case-label{
+    display:inline-block;
+    background:#173b70;
+    color:white;
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+.ayat{
+    background:white;
+    border-radius:20px;
+    border:2px dashed #bfdbfe;
+    padding:25px;
+    text-align:center;
+    font-family:'Amiri',serif;
+    font-size:48px;
+    line-height:1.7;
+    direction:rtl;
+    color:#173b70;
+    box-shadow:inset 0 2px 8px rgba(0,0,0,.04);
+}
+
+/* DETECTIVE STEPS */
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin:20px 0;
+}
+
+.step{
+    padding:12px 8px;
+    border-radius:15px;
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    background:#f1f5f9;
+    color:#94a3b8;
+    border:2px solid transparent;
+}
+
+.step.active{
+    background:#eff6ff;
+    color:#2563eb;
+    border-color:#93c5fd;
+}
+
+.step.done{
+    background:#f0fdf4;
+    color:#16a34a;
+    border-color:#86efac;
+}
+
+/* MISSION */
+
+.mission{
+    background:white;
+    border-radius:22px;
+    border:2px solid #e2e8f0;
+    padding:22px;
+    margin-top:18px;
+}
+
+.mission-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.mission-instruction{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+/* OPTIONS */
+
+.options{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.option{
+    border:2px solid #e2e8f0;
+    background:white;
+    padding:16px;
+    border-radius:15px;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    text-align:left;
+    transition:.2s;
+}
+
+.option:hover{
+    border-color:#60a5fa;
+    background:#eff6ff;
+    transform:translateY(-2px);
+}
+
+.option.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+    color:#166534;
+}
+
+.option.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+    color:#991b1b;
+}
+
+/* BUKTIKAN */
+
+.proof{
+    display:none;
+}
+
+.proof-row{
+    margin-bottom:14px;
+}
+
+.proof-label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    color:#64748b;
+    margin-bottom:6px;
+}
+
+select{
+    width:100%;
+    padding:13px;
+    border:2px solid #e2e8f0;
+    border-radius:12px;
+    font-family:'Poppins',sans-serif;
+    font-size:14px;
+    background:white;
+}
+
+.action-btn{
+    border:none;
+    background:linear-gradient(135deg,#173b70,#2563eb);
+    color:white;
+    padding:14px 24px;
+    border-radius:15px;
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:8px;
+    box-shadow:0 7px 18px rgba(37,99,235,.25);
+}
+
+.action-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* FEEDBACK */
+
+.feedback{
+    display:none;
+    padding:15px;
+    border-radius:15px;
+    margin-top:15px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.feedback.success{
+    display:block;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.feedback.error{
+    display:block;
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* SIDE PANEL */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-top:20px;
+}
+
+.info-card{
+    background:#f8fafc;
+    border-radius:20px;
+    padding:18px;
+    border:1px solid #e2e8f0;
+}
+
+.info-card h3{
+    margin:0 0 10px;
+    font-size:15px;
+}
+
+.rules{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.rule{
+    padding:7px 10px;
+    border-radius:10px;
+    background:white;
+    border:1px solid #dbeafe;
+    font-size:11px;
+    font-weight:600;
+}
+
+/* BADGE */
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 13px;
+    border-radius:20px;
+    background:#fff7ed;
+    color:#c2410c;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* RESULT */
+
+.result{
+    display:none;
+    text-align:center;
+    padding:50px 30px 60px;
+}
+
+.result-icon{
+    font-size:80px;
+    margin-bottom:10px;
+}
+
+.result h1{
+    font-size:34px;
+    color:#173b70;
+    margin:10px 0;
+}
+
+.final-score{
+    font-size:60px;
+    font-weight:800;
+    color:#2563eb;
+}
+
+.result-message{
+    max-width:650px;
+    margin:10px auto 25px;
+    color:#64748b;
+    line-height:1.7;
+}
+
+.badge-final{
+    display:inline-block;
+    padding:15px 25px;
+    border-radius:20px;
+    background:linear-gradient(135deg,#fef3c7,#fde68a);
+    color:#92400e;
+    font-weight:800;
+    margin-bottom:25px;
+}
+
+.restart{
+    border:none;
+    padding:15px 30px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#173b70,#2563eb);
+    color:white;
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    cursor:pointer;
+    font-size:15px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:750px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .stats{
+        justify-content:flex-start;
+    }
+
+    .steps{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .options{
+        grid-template-columns:1fr;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .ayat{
+        font-size:36px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div>
+        <div class="logo">
+            PEN-TAJ<span>+</span>
+        </div>
+
+        <div class="subtitle">
+            PERMAINAN DETEKTIF TAJWID
+        </div>
+
+        <div class="subtitle">
+            Disediakan oleh Ustazah Nuraini binti Salim
+        </div>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <small>KES</small>
+            <strong id="kes">1</strong>
+        </div>
+
+        <div class="stat">
+            <small>SKOR</small>
+            <strong id="score">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>STREAK</small>
+            <strong id="streak">0 🔥</strong>
+        </div>
+
+        <div class="stat">
+            <small>LENCANA</small>
+            <strong id="badge">🕵️</strong>
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- PROGRESS -->
+
+<div class="progress-area">
+
+    <div class="progress-top">
+
+        <span>Fail Kes Detektif</span>
+
+        <span id="progressText">
+            0 / 10
+        </span>
+
+    </div>
+
+    <div class="progress-bar">
+
+        <div id="progress" class="progress"></div>
+
+    </div>
+
+</div>
+
+
+<!-- GAME AREA -->
+
+<main id="gameArea" class="main">
+
+    <div class="case-title">
+
+        <div class="detective-icon">
+            🕵️
+        </div>
+
+        <div>
+            <h1>DETEKTIF TAJWID</h1>
+
+            <p>
+                Selesaikan kes dengan mencari petunjuk hukum Nun Sakinah & Tanwin.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- AYAT -->
+
+    <div class="case-card">
+
+        <div class="case-label">
+            🔍 KES TAJWID MISTERI
+        </div>
+
+        <div id="ayat" class="ayat">
+            مِنْ رَبِّهِمْ
+        </div>
+
+    </div>
+
+
+    <!-- STEPS -->
+
+    <div class="steps">
+
+        <div id="step1" class="step active">
+            🔎<br>
+            CARI
+        </div>
+
+        <div id="step2" class="step">
+            👀<br>
+            KENAL PASTI
+        </div>
+
+        <div id="step3" class="step">
+            🧠<br>
+            TENTUKAN
+        </div>
+
+        <div id="step4" class="step">
+            📋<br>
+            BUKTIKAN
+        </div>
+
+    </div>
+
+
+    <!-- MISSION -->
+
+    <section class="mission">
+
+        <div id="missionTitle" class="mission-title">
+            🔎 CARI PETUNJUK
+        </div>
+
+        <div id="missionInstruction" class="mission-instruction">
+            Cari Nun Sakinah atau Tanwin yang menjadi petunjuk dalam potongan ayat.
+        </div>
+
+        <div id="options" class="options"></div>
+
+        <div id="proof" class="proof">
+
+            <div class="proof-row">
+
+                <label class="proof-label">
+                    Hukum yang kamu pilih
+                </label>
+
+                <select id="proofRule">
+
+                    <option value="">
+                        Pilih hukum
+                    </option>
+
+                    <option>
+                        Izhar Halqi
+                    </option>
+
+                    <option>
+                        Idgham Maal Ghunnah
+                    </option>
+
+                    <option>
+                        Idgham Bila Ghunnah
+                    </option>
+
+                    <option>
+                        Iqlab
+                    </option>
+
+                    <option>
+                        Ikhfa’ Hakiki
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="proof-row">
+
+                <label class="proof-label">
+                    Huruf selepas Nun Sakinah / Tanwin
+                </label>
+
+                <select id="proofLetter">
+
+                    <option value="">
+                        Pilih huruf
+                    </option>
+
+                    <option>ء</option>
+                    <option>ه</option>
+                    <option>ع</option>
+                    <option>ح</option>
+                    <option>غ</option>
+                    <option>خ</option>
+
+                    <option>ي</option>
+                    <option>ن</option>
+                    <option>م</option>
+                    <option>و</option>
+
+                    <option>ل</option>
+                    <option>ر</option>
+
+                    <option>ب</option>
+
+                    <option>ت</option>
+                    <option>ث</option>
+                    <option>ج</option>
+                    <option>د</option>
+                    <option>ذ</option>
+                    <option>ز</option>
+                    <option>س</option>
+                    <option>ش</option>
+                    <option>ص</option>
+                    <option>ض</option>
+                    <option>ط</option>
+                    <option>ظ</option>
+                    <option>ف</option>
+                    <option>ق</option>
+                    <option>ك</option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="action-btn"
+                onclick="semakBukti()">
+
+                🔐 BUKTIKAN JAWAPAN
+
+            </button>
+
+        </div>
+
+
+        <div id="feedback" class="feedback"></div>
+
+    </section>
+
+
+    <!-- INFO -->
+
+    <div class="info-grid">
+
+        <div class="info-card">
+
+            <h3>
+                🎯 Papan Siasatan
+            </h3>
+
+            <div class="badge" id="badgeText">
+                🕵️ Detektif Muda
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+                📚 5 Hukum Kes
+            </h3>
+
+            <div class="rules">
+
+                <span class="rule">
+                    Izhar Halqi
+                </span>
+
+                <span class="rule">
+                    Idgham Maal Ghunnah
+                </span>
+
+                <span class="rule">
+                    Idgham Bila Ghunnah
+                </span>
+
+                <span class="rule">
+                    Iqlab
+                </span>
+
+                <span class="rule">
+                    Ikhfa’ Hakiki
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- RESULT -->
+
+<section id="result" class="result">
+
+    <div id="resultIcon" class="result-icon">
+        🏆
+    </div>
+
+    <h1>
+        SIASATAN SELESAI!
+    </h1>
+
+    <div id="finalScore" class="final-score">
+        0 / 10
+    </div>
+
+    <div id="finalBadge" class="badge-final">
+        🕵️ DETEKTIF MUDA
+    </div>
+
+    <p id="resultMessage" class="result-message"></p>
+
+    <button
+        class="restart"
+        onclick="mulaPermainan()">
+
+        🔄 MULAKAN SIASATAN BAHARU
+
+    </button>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   DATA KES
+   ===================================================== */
+
+const kesTajwid = [
+
+    {
+        ayat:"مِنْ رَبِّهِمْ",
+        rule:"Idgham Bila Ghunnah",
+        letter:"ر",
+        clue:"Nun Sakinah bertemu huruf ر."
+    },
+
+    {
+        ayat:"مِنْ رِزْقٍ",
+        rule:"Idgham Bila Ghunnah",
+        letter:"ر",
+        clue:"Nun Sakinah bertemu huruf ر."
+    },
+
+    {
+        ayat:"مَنْ لَمْ",
+        rule:"Idgham Bila Ghunnah",
+        letter:"ل",
+        clue:"Nun Sakinah bertemu huruf ل."
+    },
+
+    {
+        ayat:"مَنْ يَقُولُ",
+        rule:"Idgham Maal Ghunnah",
+        letter:"ي",
+        clue:"Nun Sakinah bertemu huruf ي."
+    },
+
+    {
+        ayat:"مِنْ مَالٍ",
+        rule:"Idgham Maal Ghunnah",
+        letter:"م",
+        clue:"Nun Sakinah bertemu huruf م."
+    },
+
+    {
+        ayat:"وُجُوهٌ يَوْمَئِذٍ",
+        rule:"Idgham Maal Ghunnah",
+        letter:"ي",
+        clue:"Tanwin bertemu huruf ي."
+    },
+
+    {
+        ayat:"مِنْ بَعْدِ",
+        rule:"Iqlab",
+        letter:"ب",
+        clue:"Nun Sakinah bertemu huruf ب."
+    },
+
+    {
+        ayat:"سَمِيعٌ بَصِيرٌ",
+        rule:"Iqlab",
+        letter:"ب",
+        clue:"Tanwin bertemu huruf ب."
+    },
+
+    {
+        ayat:"أَنْبِئْهُمْ",
+        rule:"Iqlab",
+        letter:"ب",
+        clue:"Nun Sakinah bertemu huruf ب."
+    },
+
+    {
+        ayat:"مِنْ أَيِّ",
+        rule:"Izhar Halqi",
+        letter:"ء",
+        clue:"Nun Sakinah bertemu salah satu huruf halqi."
+    },
+
+    {
+        ayat:"مِنْ هَادٍ",
+        rule:"Izhar Halqi",
+        letter:"ه",
+        clue:"Nun Sakinah bertemu huruf ه."
+    },
+
+    {
+        ayat:"مِنْ عَيْنٍ",
+        rule:"Izhar Halqi",
+        letter:"ع",
+        clue:"Nun Sakinah bertemu huruf ع."
+    },
+
+    {
+        ayat:"سَمِيعٌ عَلِيمٌ",
+        rule:"Izhar Halqi",
+        letter:"ع",
+        clue:"Tanwin bertemu huruf ع."
+    },
+
+    {
+        ayat:"مَنْ تَقِي",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ت",
+        clue:"Nun Sakinah bertemu huruf ت."
+    },
+
+    {
+        ayat:"مَنْ ثَقُلَتْ",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ث",
+        clue:"Nun Sakinah bertemu huruf ث."
+    },
+
+    {
+        ayat:"مِنْ شَرِّ",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ش",
+        clue:"Nun Sakinah bertemu huruf ش."
+    },
+
+    {
+        ayat:"مَنْ صَبَرَ",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ص",
+        clue:"Nun Sakinah bertemu huruf ص."
+    },
+
+    {
+        ayat:"عَنْ طَبَقٍ",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ط",
+        clue:"Nun Sakinah bertemu huruf ط."
+    },
+
+    {
+        ayat:"مِنْ قَبْلُ",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ق",
+        clue:"Nun Sakinah bertemu huruf ق."
+    },
+
+    {
+        ayat:"إِنْ كَانَ",
+        rule:"Ikhfa’ Hakiki",
+        letter:"ك",
+        clue:"Nun Sakinah bertemu huruf ك."
+    }
+
+];
+
+
+/* =====================================================
+   PEMBOLEHUBAH
+   ===================================================== */
+
+let kesRawak = [];
+
+let kesSemasa = 0;
+
+let skor = 0;
+
+let streak = 0;
+
+let langkah = 1;
+
+let pilihanRule = false;
+
+let pilihanLetter = false;
+
+const JUMLAH_KES = 10;
+
+
+/* =====================================================
+   SHUFFLE
+   ===================================================== */
+
+function shuffle(array){
+
+    const hasil = [...array];
+
+    for(let i = hasil.length - 1; i > 0; i--){
+
+        const j =
+            Math.floor(Math.random() * (i + 1));
+
+        [hasil[i],hasil[j]] =
+            [hasil[j],hasil[i]];
+
+    }
+
+    return hasil;
+}
+
+
+/* =====================================================
+   MULA PERMAINAN
+   ===================================================== */
+
+function mulaPermainan(){
+
+    kesRawak =
+        shuffle(kesTajwid).slice(0,JUMLAH_KES);
+
+    kesSemasa = 0;
+
+    skor = 0;
+
+    streak = 0;
+
+    document.getElementById("gameArea").style.display =
+        "block";
+
+    document.getElementById("result").style.display =
+        "none";
+
+    updateStats();
+
+    paparKes();
+
+}
+
+
+/* =====================================================
+   PAPAR KES
+   ===================================================== */
+
+function paparKes(){
+
+    const kes =
+        kesRawak[kesSemasa];
+
+    document.getElementById("kes").innerText =
+        kesSemasa + 1;
+
+    document.getElementById("ayat").innerText =
+        kes.ayat;
+
+    const peratus =
+        (kesSemasa / JUMLAH_KES) * 100;
+
+    document.getElementById("progress").style.width =
+        peratus + "%";
+
+    document.getElementById("progressText").innerText =
+        `${kesSemasa} / ${JUMLAH_KES}`;
+
+    langkah = 1;
+
+    pilihanRule = false;
+
+    pilihanLetter = false;
+
+    resetSteps();
+
+    paparLangkahCari();
+
+}
+
+
+/* =====================================================
+   RESET LANGKAH
+   ===================================================== */
+
+function resetSteps(){
+
+    for(let i=1;i<=4;i++){
+
+        document
+            .getElementById("step"+i)
+            .className =
+            "step";
+
+    }
+
+    document
+        .getElementById("step1")
+        .classList.add("active");
+
+}
+
+
+/* =====================================================
+   LANGKAH 1
+   CARI
+   ===================================================== */
+
+function paparLangkahCari(){
+
+    document.getElementById("missionTitle").innerText =
+        "🔎 CARI PETUNJUK";
+
+    document.getElementById("missionInstruction").innerText =
+        "Apakah petunjuk utama yang perlu kamu cari dalam potongan ayat ini?";
+
+    const options =
+        document.getElementById("options");
+
+    options.innerHTML = "";
+
+    const pilihan = shuffle([
+
+        "Nun Sakinah atau Tanwin",
+
+        "Mim Sakinah",
+
+        "Mad Asli",
+
+        "Qalqalah"
+
+    ]);
+
+    pilihan.forEach((item)=>{
+
+        const btn =
+            document.createElement("button");
+
+        btn.className =
+            "option";
+
+        btn.innerText =
+            item;
+
+        btn.onclick = ()=>{
+
+            if(item === "Nun Sakinah atau Tanwin"){
+
+                btn.classList.add("correct");
+
+                setTimeout(
+                    paparLangkahKenalPasti,
+                    600
+                );
+
+            }
+
+            else{
+
+                btn.classList.add("wrong");
+
+                streak = 0;
+
+                updateStats();
+
+            }
+
+        };
+
+        options.appendChild(btn);
+
+    });
+
+}
+
+
+/* =====================================================
+   LANGKAH 2
+   KENAL PASTI HURUF
+   ===================================================== */
+
+function paparLangkahKenalPasti(){
+
+    langkah = 2;
+
+    document
+        .getElementById("step1")
+        .className = "step done";
+
+    document
+        .getElementById("step2")
+        .className = "step active";
+
+    document.getElementById("missionTitle").innerText =
+        "👀 KENAL PASTI HURUF";
+
+    document.getElementById("missionInstruction").innerText =
+        "Apakah huruf yang datang selepas Nun Sakinah atau Tanwin?";
+
+    const options =
+        document.getElementById("options");
+
+    options.innerHTML = "";
+
+    const kes =
+        kesRawak[kesSemasa];
+
+    const pilihan =
+        binaPilihanHuruf(kes.letter);
+
+    pilihan.forEach((huruf)=>{
+
+        const btn =
+            document.createElement("button");
+
+        btn.className =
+            "option";
+
+        btn.innerText =
+            huruf;
+
+        btn.style.fontFamily =
+            "'Amiri',serif";
+
+        btn.style.fontSize =
+            "28px";
+
+        btn.onclick = ()=>{
+
+            if(huruf === kes.letter){
+
+                btn.classList.add("correct");
+
+                pilihanLetter = true;
+
+                streak++;
+
+                updateStats();
+
+                setTimeout(
+                    paparLangkahTentukan,
+                    600
+                );
+
+            }
+
+            else{
+
+                btn.classList.add("wrong");
+
+                streak = 0;
+
+                updateStats();
+
+            }
+
+        };
+
+        options.appendChild(btn);
+
+    });
+
+}
+
+
+/* =====================================================
+   PILIHAN HURUF
+   ===================================================== */
+
+function binaPilihanHuruf(betul){
+
+    const semuaHuruf = [
+
+        "ء","ه","ع","ح","غ","خ",
+
+        "ي","ن","م","و",
+
+        "ل","ر",
+
+        "ب",
+
+        "ت","ث","ج","د","ذ","ز",
+
+        "س","ش","ص","ض","ط","ظ",
+
+        "ف","ق","ك"
+
+    ];
+
+    const salah =
+        shuffle(
+            semuaHuruf.filter(h=>h!==betul)
+        ).slice(0,3);
+
+    return shuffle([
+        betul,
+        ...salah
+    ]);
+
+}
+
+
+/* =====================================================
+   LANGKAH 3
+   TENTUKAN HUKUM
+   ===================================================== */
+
+function paparLangkahTentukan(){
+
+    langkah = 3;
+
+    document
+        .getElementById("step2")
+        .className = "step done";
+
+    document
+        .getElementById("step3")
+        .className = "step active";
+
+    document.getElementById("missionTitle").innerText =
+        "🧠 TENTUKAN HUKUM";
+
+    document.getElementById("missionInstruction").innerText =
+        "Berdasarkan petunjuk yang ditemui, apakah hukum tajwid yang betul?";
+
+    const options =
+        document.getElementById("options");
+
+    options.innerHTML = "";
+
+    const semuaHukum = [
+
+        "Izhar Halqi",
+
+        "Idgham Maal Ghunnah",
+
+        "Idgham Bila Ghunnah",
+
+        "Iqlab",
+
+        "Ikhfa’ Hakiki"
+
+    ];
+
+    const pilihan =
+        shuffle(semuaHukum);
+
+    const kes =
+        kesRawak[kesSemasa];
+
+    pilihan.forEach((hukum)=>{
+
+        const btn =
+            document.createElement("button");
+
+        btn.className =
+            "option";
+
+        btn.innerText =
+            hukum;
+
+        btn.onclick = ()=>{
+
+            if(hukum === kes.rule){
+
+                btn.classList.add("correct");
+
+                pilihanRule = true;
+
+                skor += 10;
+
+                streak++;
+
+                updateStats();
+
+                setTimeout(
+                    paparLangkahBuktikan,
+                    600
+                );
+
+            }
+
+            else{
+
+                btn.classList.add("wrong");
+
+                streak = 0;
+
+                updateStats();
+
+            }
+
+        };
+
+        options.appendChild(btn);
+
+    });
+
+}
+
+
+/* =====================================================
+   LANGKAH 4
+   BUKTIKAN
+   ===================================================== */
+
+function paparLangkahBuktikan(){
+
+    langkah = 4;
+
+    document
+        .getElementById("step3")
+        .className = "step done";
+
+    document
+        .getElementById("step4")
+        .className = "step active";
+
+    document.getElementById("missionTitle").innerText =
+        "📋 BUKTIKAN JAWAPAN";
+
+    document.getElementById("missionInstruction").innerText =
+        "Lengkapkan bukti siasatan. Pilih hukum dan huruf yang tepat.";
+
+    document.getElementById("options").innerHTML = "";
+
+    document.getElementById("proof").style.display =
+        "block";
+
+    document.getElementById("feedback").style.display =
+        "none";
+
+    document.getElementById("proofRule").value = "";
+
+    document.getElementById("proofLetter").value = "";
+
+}
+
+
+/* =====================================================
+   SEMAK BUKTI
+   ===================================================== */
+
+function semakBukti(){
+
+    const kes =
+        kesRawak[kesSemasa];
+
+    const rule =
+        document.getElementById("proofRule").value;
+
+    const letter =
+        document.getElementById("proofLetter").value;
+
+    const feedback =
+        document.getElementById("feedback");
+
+    if(!rule || !letter){
+
+        feedback.className =
+            "feedback error";
+
+        feedback.innerText =
+            "⚠️ Lengkapkan kedua-dua petunjuk sebelum mengunci bukti.";
+
+        feedback.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    if(
+        rule === kes.rule &&
+        letter === kes.letter
+    ){
+
+        skor += 20;
+
+        streak++;
+
+        feedback.className =
+            "feedback success";
+
+        feedback.innerHTML =
+            `🔓 KES BERJAYA DISELESAIKAN!<br><br>
+             ${kes.clue}<br><br>
+             <strong>+20 mata</strong>`;
+
+        feedback.style.display =
+            "block";
+
+        document
+            .getElementById("step4")
+            .className = "step done";
+
+        updateStats();
+
+        setTimeout(
+            nextKes,
+            1800
+        );
+
+    }
+
+    else{
+
+        streak = 0;
+
+        feedback.className =
+            "feedback error";
+
+        feedback.innerText =
+            "❌ Bukti belum tepat. Semak semula huruf dan hukum yang kamu pilih.";
+
+        feedback.style.display =
+            "block";
+
+        updateStats();
+
+    }
+
+}
+
+
+/* =====================================================
+   KES SETERUSNYA
+   ===================================================== */
+
+function nextKes(){
+
+    kesSemasa++;
+
+    if(kesSemasa >= JUMLAH_KES){
+
+        tamatPermainan();
+
+    }
+
+    else{
+
+        document.getElementById("proof").style.display =
+            "none";
+
+        document.getElementById("feedback").style.display =
+            "none";
+
+        paparKes();
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE STATS
+   ===================================================== */
+
+function updateStats(){
+
+    document.getElementById("score").innerText =
+        skor;
+
+    document.getElementById("streak").innerText =
+        streak + " 🔥";
+
+    let badge =
+        "🕵️";
+
+    let badgeText =
+        "🕵️ Detektif Muda";
+
+
+    if(skor >= 80){
+
+        badge = "🔎";
+
+        badgeText =
+            "🔎 Penyiasat Tajwid";
+
+    }
+
+    if(skor >= 160){
+
+        badge = "🧠";
+
+        badgeText =
+            "🧠 Detektif Tajwid";
+
+    }
+
+    if(skor >= 240){
+
+        badge = "🏆";
+
+        badgeText =
+            "🏆 Master Tajwid";
+
+    }
+
+
+    document.getElementById("badge").innerText =
+        badge;
+
+    document.getElementById("badgeText").innerText =
+        badgeText;
+
+}
+
+
+/* =====================================================
+   TAMAT
+   ===================================================== */
+
+function tamatPermainan(){
+
+    document.getElementById("gameArea").style.display =
+        "none";
+
+    document.getElementById("result").style.display =
+        "block";
+
+    document.getElementById("progress").style.width =
+        "100%";
+
+    document.getElementById("progressText").innerText =
+        "10 / 10";
+
+
+    document.getElementById("finalScore").innerText =
+        `${skor} mata`;
+
+
+    let badge =
+        "🕵️ DETEKTIF MUDA";
+
+    let message =
+        "Teruskan latihan untuk meningkatkan kemahiran mengenal pasti hukum Nun Sakinah dan Tanwin.";
+
+
+    if(skor >= 80){
+
+        badge =
+            "🔎 PENYIASAT TAJWID";
+
+        message =
+            "Hebat! Kamu sudah semakin cekap mencari dan mengenal pasti petunjuk tajwid.";
+
+    }
+
+
+    if(skor >= 160){
+
+        badge =
+            "🧠 DETEKTIF TAJWID";
+
+        message =
+            "Cemerlang! Kamu berjaya menggunakan petunjuk huruf untuk menentukan hukum tajwid.";
+
+    }
+
+
+    if(skor >= 240){
+
+        badge =
+            "🏆 MASTER TAJWID";
+
+        message =
+            "Luar biasa! Kamu telah menyelesaikan siasatan dengan kemahiran tajwid yang mantap.";
+
+        pelancarkanConfetti();
+
+    }
+
+
+    document.getElementById("finalBadge").innerText =
+        badge;
+
+    document.getElementById("resultMessage").innerText =
+        message;
+
+}
+
+
+/* =====================================================
+   CONFETTI
+   ===================================================== */
+
+function pelancarkanConfetti(){
+
+    confetti({
+
+        particleCount:180,
+
+        spread:100,
+
+        origin:{
+            y:.6
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+mulaPermainan();
+
+</script>
+
+</body>
+</html>
